@@ -1,0 +1,27 @@
+# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  year: 1
+  term: MyString
+  day: MyString
+  period: MyString
+  teacher: MyString
+  name: MyString
+  lecture_number: MyString
+  credits: 1
+  syllabus_url: MyString
+  subject_type: MyString
+  faculty_code: MyString
+
+two:
+  year: 1
+  term: MyString
+  day: MyString
+  period: MyString
+  teacher: MyString
+  name: MyString
+  lecture_number: MyString
+  credits: 1
+  syllabus_url: MyString
+  subject_type: MyString
+  faculty_code: MyString

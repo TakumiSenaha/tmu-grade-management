@@ -1,0 +1,63 @@
+<!--/veiws/search/search/index.html.erb-->
+<div id="search-container"></div>
+
+
+
+<%# <!-- 検索フォームのUI -->
+<select id="year" onchange="filterResults()">
+  <!-- 年度のオプション -->
+</select>
+<select id="term" onchange="filterResults()">
+  <!-- 学期のオプション -->
+</select>
+<select id="day" onchange="filterResults()">
+  <!-- 曜日のオプション -->
+</select>
+<!-- 他の検索キーも同様に -->
+
+<div id="search-results">
+  <!-- 検索結果がここに表示される -->
+</div>
+
+<script>
+function filterResults() {
+  const year = document.getElementById('year').value;
+  const term = document.getElementById('term').value;
+  const day = document.getElementById('day').value;
+  const period = document.getElementById('period').value;
+  // 他の検索キーの値も取得
+  // ...
+
+  // フィルタリングされた結果を取得するためのリクエスト
+  fetch(`/search?year=${year}&term=${term}&day=${day}` /* 他のパラメータも追加 */)
+    .then(response => response.json())
+    .then(data => {
+      const resultsContainer = document.getElementById('search-results');
+      resultsContainer.innerHTML = ''; // 現在の結果をクリア
+
+      data.forEach(lecture => {
+        // 結果表示のための要素を生成
+        const resultItem = document.createElement('div');
+        resultItem.innerHTML = `
+          <p>Year: ${lecture.year}</p>
+          <p>Term: ${lecture.term}</p>
+          <p>Day: ${lecture.day}</p>
+          <p>Period: ${lecture.period}</p>
+          <p>Teacher: ${lecture.teacher}</p>se
+          <p>Name: ${lecture.name}</p>
+          <p>Lecture Number: ${lecture.lecture_number}</p>
+          <p>Credits: ${lecture.credits}</p>
+          <p>Syllabus URL: ${lecture.syllabus_url}</p>
+          <p>Subject Type: ${lecture.subject_type}</p>
+          <p>Faculty Code: ${lecture.faculty_code}</p>
+          <button onclick="addToDatabase(${lecture.id})">追加</button>
+        `;
+        resultsContainer.appendChild(resultItem);
+      });
+    });
+}
+
+function addToDatabase(lectureId) {
+  // ここでサーバーにPOSTリクエストを送信してデータを追加
+}
+</script> %>

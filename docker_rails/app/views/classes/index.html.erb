@@ -1,0 +1,19 @@
+<!-- app/views/classes/index.html.erb -->
+<select id="year-select">
+  <option value="2022">2022年度</option>
+  <option value="2021">2021年度</option>
+  <!-- その他のオプション -->
+</select>
+
+<script>
+  document.getElementById('year-select').addEventListener('change', function() {
+    var selectedYear = this.value;
+    // 選択された年度に基づいてAjaxリクエストを行う
+    fetch(`/classes/data?year=${selectedYear}`)
+      .then(response => response.json())
+      .then(data => {
+        // レスポンスデータに基づいてページを更新
+      })
+      .catch(error => console.error('Error:', error));
+  });
+</script>
