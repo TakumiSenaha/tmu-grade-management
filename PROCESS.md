@@ -289,4 +289,7 @@ end
 <!--/veiws/search/search/index.html.erb-->
 <div id="search-container"></div>
 ```
+## Edit /veiws/search/search/index.html.erb
+
+
 

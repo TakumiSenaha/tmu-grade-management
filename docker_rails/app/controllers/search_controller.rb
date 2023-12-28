@@ -2,9 +2,9 @@
 class SearchController < ApplicationController
   def index
     # パラメータに応じて検索を行う
-    puts "Search params: #{search_params}"
-    puts "Search results: #{@lectures}"
     @lectures = Lecture.search(search_params)
+
+    render json: @lectures
   end
 
   private
