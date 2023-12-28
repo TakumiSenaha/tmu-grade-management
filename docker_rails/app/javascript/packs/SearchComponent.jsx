@@ -1,4 +1,4 @@
-// app/javascript/packs/SearchComponent.jsx
+// /app/javascript/packs/SearchComponent.jsx
 
 import React, { useState } from 'react';
 

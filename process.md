@@ -18,7 +18,6 @@ gem 'react-rails'
    ```
    ```sh
    rails generate model Lecture year:integer term:string day:string period:string teacher:string name:string lecture_number:string credits:integer syllabus_url:string subject_type:string faculty_code:string
-
    ```
 2. The **/app/models/lecture.rb** file is generated and the Lecture class is defined. Edit lecture.rb to tell Rails which attributes will be used.
    ```rb
@@ -124,8 +123,170 @@ gem 'react-rails'
    USE your_database_name;
    SELECT * FROM lectures;
    ```
-## Set Up rutes.rb
+
+## Set Up React
+1. Create an **entrypoint.sh** file in the project root with the following contents
+   ```sh
+   #!/bin/bash
+    set -e
+
+    # 依存関係のインストール(これはDockerfileで行っている場合はいらない)
+    # bundle install
+
+    # WebpackerとReactのセットアップ
+    rails webpacker:install
+    rails webpacker:install:react
+
+    # その他の初期化コマンド（必要に応じて）
+
+    # サーバー起動コマンド
+    exec "$@"
+
+   ```
+2. Copy entrypoint.sh into the Dockerfile and set it as executable
+   ```dockerfile
+   COPY entrypoint.sh /usr/bin/
+   RUN chmod +x /usr/bin/entrypoint.sh
+   ENTRYPOINT ["entrypoint.sh"]
+   ```
+3. Use the following commands to compile JavaScript, CSS, and other files and check for errors.
+   ```sh
+   rails webpacker:compile
+   ```
+4. Creating and Importing React Components
+   ```jsx
+   // /app/javascript/packs/SearchComponent.jsx
+
+    import React, { useState } from 'react';
+
+    function SearchComponent() {
+        const [searchParams, setSearchParams] = useState({
+            year: '',
+            term: '',
+            day: ''
+            // 他の検索パラメータも追加
+        });
+
+        const [searchResults, setSearchResults] = useState([]);
+
+        function handleInputChange(event) {
+            const { name, value } = event.target;
+            setSearchParams(prevParams => ({
+            ...prevParams,
+            [name]: value
+            }));
+        }
+
+        function handleSubmit(event) {
+            event.preventDefault();
+            fetch(`/search?year=${searchParams.year}&term=${searchParams.term}&day=${searchParams.day}`)
+            .then(response => response.json())
+            .then(data => setSearchResults(data));
+        }
+
+        return (
+            <div>
+                <form onSubmit={handleSubmit}>
+                    <input
+                    name="year"
+                    value={searchParams.year}
+                    onChange={handleInputChange}
+                    placeholder="年度"
+                    />
+                    <input
+                    name="term"
+                    value={searchParams.term}
+                    onChange={handleInputChange}
+                    placeholder="学期"
+                    />
+                    <input
+                    name="day"
+                    value={searchParams.day}
+                    onChange={handleInputChange}
+                    placeholder="曜日"
+                    />
+                    <button type="submit">検索</button>
+                </form>
+
+                <div>
+                    {searchResults.map(lecture => (
+                    <div key={lecture.id}>
+                        <p>{lecture.name}</p>
+                        <p>{lecture.teacher}</p>
+                        <p>{lecture.year}</p>
+                        {/* 他の情報も表示 */}
+                    </div>
+                    ))}
+                </div>
+            </div>
+        );
+    }
+    export default SearchComponent;
+   ```
+
+   app/javascript/packs/application.js に React コンポーネントをインポート
+   ```js
+   // This file is automatically compiled by Webpack, along with any other files
+    // present in this directory. You're encouraged to place your actual application logic in
+    // a relevant structure within app/javascript and only use these pack files to reference
+    // that code so it'll be compiled.
+
+    // /app/javascript/packs/application.js
+    import Rails from "@rails/ujs"
+    import Turbolinks from "turbolinks"
+    import * as ActiveStorage from "@rails/activestorage"
+    import "channels"
+
+    // 追加項目
+    import React from 'react';
+    import ReactDOM from 'react-dom';
+    import SearchComponent from './SearchComponent';
+
+    document.addEventListener('DOMContentLoaded', () => {
+    const container = document.getElementById('search-container');
+    if (container) {
+        ReactDOM.render(<SearchComponent />, container);
+        }
+    });
+    //
+
+    Rails.start()
+    Turbolinks.start()
+    ActiveStorage.start()
+   ```
+5. 
+## Set Up routes.rb
 ```
 get 'search', to: 'search#index'
+```
+
+## Configure controller settings for **routes.rb**
+```sh
+docker-compose exec [container-name] rails generate controller Search
+```
+
+## Edit the created controller.
+```rb
+# /app/controllers/search_controller.rb
+class SearchController < ApplicationController
+  def index
+    # パラメータに応じて検索を行う
+    puts "Search params: #{search_params}"
+    puts "Search results: #{@lectures}"
+    @lectures = Lecture.search(search_params)
+  end
+
+  private
+
+  def search_params
+    params.permit(:year, :term, :day, :period, :teacher, :name, :lecture_number, :credits, :subject_type, :faculty_code)
+    # 必要に応じて他のパラメータも許可
+  end
+end
+```
+## Setting of view files in /app/views/search
+```erb
+<!--/veiws/search/search/index.html.erb-->
+<div id="search-container"></div>
 ```
 
