@@ -1,4 +1,4 @@
-# lib/tasks/import_lectures.rake
+# /lib/tasks/import_lectures.rake
 namespace :import do
   desc "Import lectures from TSV file"
   task lectures: :environment do
