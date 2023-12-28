@@ -30,9 +30,12 @@ function SearchComponent() {
   function handleSubmit(event) {
     event.preventDefault();
     // fetchのURLを更新
-    fetch(`/search?year=${searchParams.year}&term=${searchParams.term}&day=${searchParams.day}&period=${searchParams.period}&teacher=${searchParams.teacher}&name=${searchParams.name}&lecture_number=${searchParams.lecture_number}&credits=${searchParams.credits}&subject_type=${searchParams.subject_type}&faculty_code=${searchParams.faculty_code}`)
+    fetch(`/search/data?year=${searchParams.year}&term=${searchParams.term}&day=${searchParams.day}&period=${searchParams.period}&teacher=${searchParams.teacher}&name=${searchParams.name}&lecture_number=${searchParams.lecture_number}&credits=${searchParams.credits}&subject_type=${searchParams.subject_type}&faculty_code=${searchParams.faculty_code}`)
       .then(response => response.json())
-      .then(data => setSearchResults(data));
+      .then(data => {
+        console.log(data); // この行を追加
+        setSearchResults(data);
+      });
   }
 
   return (
