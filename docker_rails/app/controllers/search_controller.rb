@@ -9,6 +9,11 @@ class SearchController < ApplicationController
     # render json: @lectures
   end
 
+  def search_data
+    @lectures = Lecture.search(params)
+    render json: @lectures
+  end
+
   private
 
   def search_params
@@ -16,9 +21,5 @@ class SearchController < ApplicationController
     # 必要に応じて他のパラメータも許可
   end
 
-  def search_data
-    @lectures = Lecture.search(params)
-    render json: @lectures
-  end
 
 end
