@@ -230,7 +230,7 @@ gem 'react-rails'
 
    ```
 
-   app/javascript/packs/application.js に React コンポーネントをインポート
+   Import React components into app/javascript/packs/application.js
    ```js
    // This file is automatically compiled by Webpack, along with any other files
     // present in this directory. You're encouraged to place your actual application logic in
