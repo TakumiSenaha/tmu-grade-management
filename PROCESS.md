@@ -190,7 +190,6 @@ gem 'react-rails'
             fetch(`/search/data?year=${searchParams.year}&term=${searchParams.term}&day=${searchParams.day}&period=${searchParams.period}&teacher=${searchParams.teacher}&name=${searchParams.name}&lecture_number=${searchParams.lecture_number}&credits=${searchParams.credits}&subject_type=${searchParams.subject_type}&faculty_code=${searchParams.faculty_code}`)
             .then(response => response.json())
             .then(data => {
-                console.log(data); // この行を追加
                 setSearchResults(data);
             });
         }
@@ -278,14 +277,16 @@ class SearchController < ApplicationController
   def index
     # パラメータに応じて検索を行う
     # 検索結果をインスタンス変数に格納する（ビューで使用するため）
-    @lectures = Lecture.search(search_params)
+    # 初期はコンポーネントをマンウトするのみで良い
+    # @lectures = Lecture.search(search_params)
 
     # 検索結果をJSON形式で返す(すべてのデータが返ってきてしまう)
     # render json: @lectures
   end
 
   def search_data
-    @lectures = Lecture.search(params)
+    # 許可するパラメータを設定して探索
+    @lectures = Lecture.search(search_params)
     render json: @lectures
   end
 
@@ -299,7 +300,11 @@ class SearchController < ApplicationController
 end
 
 ```
-## Edit /veiws/search/search/index.html.erb
+## Edit /veiws/search/index.html.erb
+<!--/veiws/search/search/index.html.erb-->
+<div id="search-container"></div>
+
+
 
 
 
