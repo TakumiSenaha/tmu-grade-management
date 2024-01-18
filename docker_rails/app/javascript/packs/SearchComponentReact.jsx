@@ -2,7 +2,7 @@
 
 import React, { useState } from 'react';
 
-function SearchComponent() {
+function SearchComponentReact() {
   const [searchParams, setSearchParams] = useState({
     year: '',
     term: '',

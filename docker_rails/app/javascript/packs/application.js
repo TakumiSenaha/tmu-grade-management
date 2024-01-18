@@ -11,12 +11,12 @@ import "channels"
 
 import React from 'react';
 import ReactDOM from 'react-dom';
-import SearchComponent from './SearchComponent';
+import SearchComponentReact from './SearchComponentReact';
 
 document.addEventListener('DOMContentLoaded', () => {
   const container = document.getElementById('search-container');
   if (container) {
-    ReactDOM.render(<SearchComponent />, container);
+    ReactDOM.render(<SearchComponentReact />, container);
   }
 });
 
