@@ -304,6 +304,75 @@ end
 <!--/veiws/search/search/index.html.erb-->
 <div id="search-container"></div>
 
+## The technology used for the front-end was changed to Vue.js, TypeScript.
+1. Update package.json
+   ```json
+{
+  "name": "docker-rails",
+  "private": true,
+  "dependencies": {
+    "@babel/plugin-proposal-private-property-in-object": "^7.21.11",
+    "@babel/preset-react": "^7.23.3",
+    "@rails/actioncable": "^6.0.0",
+    "@rails/activestorage": "^6.0.0",
+    "@rails/ujs": "^6.0.0",
+    "@rails/webpacker": "5.4.4",
+    "babel-plugin-transform-react-remove-prop-types": "^0.4.24",
+    "prop-types": "^15.8.1",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0",
+    "turbolinks": "^5.2.0",
+    "webpack": "^4.46.0",
+    "webpack-cli": "^3.3.12",
+    "vue": "^3.0.0",  // Vue.jsを追加
+    "typescript": "^4.0.0"  // TypeScriptを追加
+  },
+  "version": "0.1.0",
+  "devDependencies": {
+    "@babel/plugin-proposal-private-methods": "^7.x.x",
+    "webpack-dev-server": "^3",
+    "@vue/compiler-sfc": "^3.0.0",  // Vue用のコンパイラを追加
+    "vue-loader": "^16.0.0"  // Vue用のローダーを追加
+  }
+}
+   ```
+1. Update Dockerfile
+```docker
+# Docker Hubからruby:3.0.5のイメージをプルする
+FROM ruby:3.0.5
+
+# debian系のためapt-getを使用してnode.jsとyarnをインストール
+RUN apt-get update -qq
+RUN curl -fsSL https://deb.nodesource.com/setup_16.x | bash - \
+&& apt-get install -y nodejs
+RUN npm install --global yarn
+
+# docker内の作業ディレクトリを作成＆設定
+WORKDIR /docker_rails
+
+# Gemfile, Gemfile.lockをローカルからCOPY
+COPY Gemfile Gemfile.lock /docker_rails/
+
+# コンテナ内にコピーしたGemfileを用いてbundle install
+RUN bundle install
+
+---Add
+# package.json と yarn.lock をコピー
+COPY package.json yarn.lock /docker_rails/
+
+# コンテナ内でyarn installを実行
+RUN yarn install
+---
+
+COPY entrypoint.sh /usr/bin/
+RUN chmod +x /usr/bin/entrypoint.sh
+ENTRYPOINT ["entrypoint.sh"]
+
+# railsを起動する
+CMD ["rails", "server", "-b", "0.0.0.0"]
+```
+2. a
+3. 
 
 
 

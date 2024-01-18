@@ -16,6 +16,12 @@ COPY Gemfile Gemfile.lock /docker_rails/
 #コンテナ内にコピーしたGemfileを用いてbundel install
 RUN bundle install
 
+# package.json と yarn.lock をコピー
+COPY package.json yarn.lock /docker_rails/
+
+# コンテナ内でyarn installを実行
+RUN yarn install
+
 COPY entrypoint.sh /usr/bin/
 RUN chmod +x /usr/bin/entrypoint.sh
 ENTRYPOINT ["entrypoint.sh"]
