@@ -71,4 +71,4 @@ function SearchComponentReact() {
   );
 }
 
-export default SearchComponent;
+export default SearchComponentReact;
